@@ -1,86 +1,119 @@
-# PayFlow
+# PayFlow 💳
 
-PayFlow is a small, beginner-friendly payment reconciliation dashboard. It compares **simulated** merchant and payment-provider transaction exports. It does not send, accept, or process real payments.
+> A simple, secure, and beginner-friendly payment reconciliation dashboard built with Flask.
 
-## What it does
+PayFlow compares **simulated** merchant and payment-provider CSV exports so you can quickly find transactions that match, are missing, are duplicated, or have an incorrect amount. It is an educational portfolio project — it never processes real payments.
 
-- Creates accounts and signs users in with securely hashed passwords.
-- Stores each user's reconciliation history and report rows in a backend SQLite database.
-- Uploads two CSV files: one merchant export and one payment-provider export.
-- Matches records by `transaction_id`.
-- Flags missing transactions, duplicate IDs, amount mismatches, and currency mismatches.
-- Shows summary cards plus a searchable and filterable result table.
-- Exports a reconciliation CSV report.
-- Includes sample data and automated tests.
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.x-000000?logo=flask&logoColor=white)
+![License](https://img.shields.io/badge/Data-Simulated%20only-087B5B)
 
-## Quick start
+![PayFlow dashboard preview](assets/payflow-dashboard-preview.svg)
 
-1. Install [Python 3.10 or newer](https://www.python.org/downloads/).
-2. Open this folder in a terminal.
-3. Create and activate a virtual environment:
+## ✨ Highlights
+
+| Feature | What it does |
+| --- | --- |
+| 🔐 Account access | Sign up and log in with securely hashed passwords. |
+| 📤 CSV uploads | Upload merchant and payment-provider transaction exports. |
+| 🔎 Smart matching | Matches records using `transaction_id`. |
+| ⚠️ Issue detection | Flags missing records, duplicate IDs, amount mismatches, and currency mismatches. |
+| 📊 Clear dashboard | Displays summary cards and a searchable, filterable table. |
+| 💾 Backend history | Saves each user's reconciliation reports and transaction results in SQLite. |
+| 📥 CSV exports | Download a saved reconciliation report whenever you need it. |
+
+## 🧭 How it works
+
+```text
+Merchant CSV ──┐
+               ├──► PayFlow reconciliation engine ───► Dashboard + saved CSV report
+Provider CSV ──┘                     │
+                                    SQLite backend
+```
+
+## 🚀 Run locally
+
+### 1. Prerequisites
+
+Install [Python 3.10 or newer](https://www.python.org/downloads/) and [VS Code](https://code.visualstudio.com/).
+
+### 2. Create a virtual environment
+
+Open this project folder in VS Code, then open **Terminal → New Terminal** and run:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-4. Install the packages and start the dashboard:
+You should see `(.venv)` at the start of the terminal line.
+
+### 3. Install and start
 
 ```powershell
 pip install -r requirements.txt
 python app.py
 ```
 
-5. Visit `http://127.0.0.1:5000` in your browser. Create an account, then the dashboard displays the supplied sample reconciliation.
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000), create an account, and explore the sample reconciliation dashboard.
 
-To stop the server, press `Ctrl+C`. On macOS/Linux, activate the virtual environment with `source .venv/bin/activate`.
+To stop the app, press `Ctrl+C`. On macOS or Linux, activate the virtual environment with:
 
-## CSV format
+```bash
+source .venv/bin/activate
+```
 
-Both files must be UTF-8 `.csv` files with this header:
+## 📄 CSV format
+
+Both files must be UTF-8 `.csv` files with exactly these required columns:
 
 ```csv
 transaction_id,amount,currency,date
 TXN-1001,49.99,USD,2026-09-15
 ```
 
-Try the files in `sample_data/`. They deliberately contain a duplicate ID, a missing merchant transaction, and an amount mismatch so you can see the review states.
+Use the fictional files in `sample_data/` to see the expected format. They intentionally include a duplicate ID, a missing transaction, and an amount mismatch.
 
-## Run tests
+## 🧪 Run the tests
 
-With the virtual environment activated:
+With your virtual environment active:
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-## Keep it online (Render deployment)
+## ☁️ Deploy for an interview
 
-To keep PayFlow available after you close VS Code, deploy it to Render. The included `render.yaml` tells Render how to install and start the app securely.
+To keep PayFlow online after you close VS Code, deploy it to Render. The included `render.yaml` configures the production server and a backend data location.
 
-1. Create a new GitHub repository and upload this project to it.
-2. Create a Render account at https://render.com.
-3. In Render, click **New → Blueprint** and connect your GitHub repository.
-4. Render detects `render.yaml`. Confirm the blueprint and click **Apply**.
-5. After the build completes, open the generated `https://payflow-dashboard.onrender.com` address (Render may add a suffix if that name is taken).
+1. Push this repository to GitHub.
+2. Create a [Render](https://render.com) account.
+3. Select **New → Blueprint** in Render.
+4. Connect this GitHub repository and select **Apply**.
+5. Open the generated `https://...onrender.com` URL when the deployment is live.
 
-For a persistent backend database, select a paid Render web service: the supplied configuration attaches a persistent disk and writes the SQLite database there. Free Render web services do not support persistent disks, so their local files are erased when the service restarts. For a long-term production app, use a managed PostgreSQL database instead. Do not use the public demo with real transaction data.
+> **Persistence note:** Choose a paid Render web service for this SQLite-based version. Free Render services do not retain local database files after a restart. For a long-term production application, use managed PostgreSQL instead.
 
-## VS Code setup
-
-1. Install VS Code and the **Python** extension by Microsoft.
-2. Use **File → Open Folder** and select this PayFlow folder.
-3. Press `Ctrl+Shift+P`, choose **Python: Select Interpreter**, then select `.venv`.
-4. In the integrated terminal, activate `.venv` and run `python app.py`.
-5. To run tests, open the Testing flask icon in the left sidebar or use the test command above.
-
-## Project layout
+## 🗂️ Project structure
 
 ```text
-app.py                 Flask routes, upload validation, and CSV download
-reconciliation.py      Matching and reconciliation rules (uses NumPy for totals)
-templates/             Dashboard HTML
-static/                CSS and browser-side table search/filtering
-sample_data/           Safe fictional CSV exports
-tests/                 Automated reconciliation checks
+PayFlow/
+├── app.py                  # Flask routes, authentication, uploads, and CSV export
+├── database.py             # SQLite backend persistence layer
+├── reconciliation.py       # Matching rules and NumPy-powered totals
+├── templates/              # Dashboard, login, and signup pages
+├── static/                 # CSS and browser-side search/filtering
+├── sample_data/            # Safe fictional transaction exports
+├── tests/                  # Automated application tests
+└── render.yaml             # Render deployment configuration
 ```
+
+## 🛡️ Data and security notes
+
+- This project uses simulated data only. Do not upload real customer or payment information.
+- Passwords are stored as hashes, never plain text.
+- Each signed-in user can access only their own saved reports.
+
+---
+
+Built with Python, Flask, NumPy, HTML, CSS, JavaScript, and SQLite.
