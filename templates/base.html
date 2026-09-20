@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayFlow | Payment Reconciliation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+</head>
+<body>
+  <header><div class="brand"><span>◒</span> PayFlow</div>{% if session.get('user_id') %}<div class="account">Hi, {{ session.username }} <form action="{{ url_for('logout') }}" method="post"><button type="submit">Log out</button></form></div>{% else %}<p>Payment reconciliation made clear</p>{% endif %}</header>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>PayFlow uses simulated transactions only — no payment processing is connected.</footer>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

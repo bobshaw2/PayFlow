@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">RECONCILIATION DASHBOARD</p><h1>Keep every payment in sync.</h1><p>Compare your merchant records with your payment-provider export in a few clicks.</p></div><a href="#upload" class="button secondary">Upload CSVs</a></section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+
+<section class="upload-card" id="upload"><h2>Compare transaction files</h2><p>Both CSVs need: <code>transaction_id, amount, currency, date</code>.</p>
+  <form action="{{ url_for('reconcile_uploads') }}" method="post" enctype="multipart/form-data" class="upload-form">
+    <label>Merchant transactions<input type="file" name="merchant_file" accept=".csv,text/csv" required></label>
+    <label>Payment-provider transactions<input type="file" name="provider_file" accept=".csv,text/csv" required></label>
+    <button class="button" type="submit">Reconcile files</button>
+  </form>
+  <p class="hint">{{ 'Showing included sample data below.' if showing_sample else 'Showing your uploaded reconciliation results.' }} <a href="{{ url_for('sample_data', filename='merchant_transactions.csv') }}">Download sample merchant CSV</a> · <a href="{{ url_for('sample_data', filename='provider_transactions.csv') }}">Download sample provider CSV</a></p>
+</section>
+
+<section class="metrics">
+  <article><span>Merchant records</span><strong>{{ result.summary.merchant_count }}</strong><small>${{ '%.2f'|format(result.summary.merchant_total) }} total</small></article>
+  <article><span>Provider records</span><strong>{{ result.summary.provider_count }}</strong><small>Imported from provider</small></article>
+  <article class="good"><span>Matched</span><strong>{{ result.summary.matched }}</strong><small>Ready to settle</small></article>
+  <article class="warn"><span>Needs review</span><strong>{{ result.summary.issues }}</strong><small>{{ result.summary.duplicates }} duplicate ID(s)</small></article>
+</section>
+
+<section class="table-section"><div class="table-header"><div><h2>Transaction results</h2><p>Search by ID or filter the reconciliation outcome.</p></div><div class="controls"><input id="search" type="search" placeholder="Search transactions"><select id="status-filter"><option value="">All statuses</option>{% for status in result.transactions|map(attribute='status')|unique|sort %}<option value="{{ status }}">{{ status }}</option>{% endfor %}</select></div></div>
+  <div class="table-wrap"><table id="transactions"><thead><tr><th>Transaction ID</th><th>Merchant</th><th>Provider</th><th>Currency</th><th>Date</th><th>Status</th><th>Details</th></tr></thead><tbody>{% for tx in result.transactions %}<tr data-status="{{ tx.status }}"><td>{{ tx.transaction_id }}</td><td>{{ tx.merchant_amount or '—' }}</td><td>{{ tx.provider_amount or '—' }}</td><td>{{ tx.currency }}</td><td>{{ tx.date }}</td><td><span class="badge {{ tx.status|lower|replace(' ', '-') }}">{{ tx.status }}</span></td><td>{{ tx.note }}</td></tr>{% endfor %}</tbody></table></div><p id="empty-state" hidden>No transactions match this search.</p>
+  {% if report_id %}<div class="export-form"><a class="button secondary" href="{{ url_for('export_report', report_id=report_id) }}">Export this saved CSV report</a><small>This report and its transaction results are stored in the backend.</small></div>{% endif %}
+</section>
+{% if history %}<section class="history"><h2>Saved reconciliation history</h2><p>Your 10 latest uploaded reports are stored in the backend.</p><div class="table-wrap"><table><thead><tr><th>Saved</th><th>Merchant records</th><th>Provider records</th><th>Matched</th><th>Issues</th><th>Report</th></tr></thead><tbody>{% for item in history %}<tr><td>{{ item.created_at }}</td><td>{{ item.merchant_count }}</td><td>{{ item.provider_count }}</td><td>{{ item.matched_count }}</td><td>{{ item.issue_count }}</td><td><a href="{{ url_for('export_report', report_id=item.id) }}">Download CSV</a></td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% endblock %}

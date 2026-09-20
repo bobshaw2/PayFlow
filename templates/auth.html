@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-card">
+  <p class="eyebrow">PAYFLOW ACCOUNT</p>
+  <h1>{{ 'Create your account' if mode == 'signup' else 'Welcome back' }}</h1>
+  <p>{{ 'Your reconciliation history is saved privately in the backend.' if mode == 'signup' else 'Log in to view and export your saved reconciliation reports.' }}</p>
+  {% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+  <form method="post" class="auth-form">
+    {% if mode == 'signup' %}<label>Username<input name="username" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+"></label><label>Email address<input name="email" type="email" autocomplete="email" required></label>{% else %}<label>Username<input name="username" autocomplete="username" required></label>{% endif %}
+    <label>Password<input name="password" type="password" autocomplete="{{ 'new-password' if mode == 'signup' else 'current-password' }}" required minlength="8"></label>
+    <button class="button" type="submit">{{ 'Create account' if mode == 'signup' else 'Log in' }}</button>
+  </form>
+  <p class="auth-switch">{% if mode == 'signup' %}Already have an account? <a href="{{ url_for('login') }}">Log in</a>{% else %}New to PayFlow? <a href="{{ url_for('signup') }}">Create an account</a>{% endif %}</p>
+</section>
+{% endblock %}

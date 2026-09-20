@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: payflow-dashboard
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT "app:create_app()"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.14.3
+      - key: PAYFLOW_DATA_DIR
+        value: /opt/render/project/src/data
+    disk:
+      name: payflow-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
