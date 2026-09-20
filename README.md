@@ -84,7 +84,7 @@ python -m unittest discover -s tests -v
 
 ## ☁️ Deploy for an interview
 
-To keep PayFlow online after you close VS Code, deploy it to Render. The included `render.yaml` configures the production server and a backend data location.
+To keep PayFlow online after you close VS Code, deploy it to Render. The included `render.yaml` configures a free, interview-demo-ready web service.
 
 1. Push this repository to GitHub.
 2. Create a [Render](https://render.com) account.
@@ -92,7 +92,7 @@ To keep PayFlow online after you close VS Code, deploy it to Render. The include
 4. Connect this GitHub repository and select **Apply**.
 5. Open the generated `https://...onrender.com` URL when the deployment is live.
 
-> **Persistence note:** Choose a paid Render web service for this SQLite-based version. Free Render services do not retain local database files after a restart. For a long-term production application, use managed PostgreSQL instead.
+> **Free-demo note:** Render's free web service can sleep after inactivity and does not preserve this app's SQLite database after a restart or redeploy. Create a fresh demo account before your interview. For long-term accounts and report storage, use a managed PostgreSQL database.
 
 ## 🗂️ Project structure
 
