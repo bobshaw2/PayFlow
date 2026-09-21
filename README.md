@@ -55,7 +55,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open [http://127.0.0.1:5000]([http://127.0.0.1:5000](https://payflow-dashboard.onrender.com)), create an account, and explore the sample reconciliation dashboard.
+Open [https://payflow-dashboard.onrender.com](https://payflow-dashboard.onrender.com), create an account, and explore the sample reconciliation dashboard.
 
 To stop the app, press `Ctrl+C`. On macOS or Linux, activate the virtual environment with:
 
