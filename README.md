@@ -10,6 +10,12 @@ PayFlow compares **simulated** merchant and payment-provider CSV exports so you 
 
 ![PayFlow dashboard preview](assets/payflow-dashboard-preview.svg)
 
+## 🏗️ Architecture and application flow
+
+![PayFlow architecture and workflow diagram showing the authentication, upload, reconciliation, reporting, and data-storage flow](assets/payflow-architecture.jpeg)
+
+*PayFlow architecture and workflow: users authenticate, upload fictional merchant and provider CSV files, review reconciliation results, and can export saved reports.*
+
 ## ✨ Highlights
 
 | Feature | What it does |
